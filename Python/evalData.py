@@ -12,7 +12,15 @@ if __name__ == '__main__':
 
     #Get the data from the laser
     #mdata = pd.read_csv('alcolhol.csv')
-    mdata = pd.read_csv('data/10.26_2(al).csv')
+	
+	####################################################
+	####################################################
+	####################################################
+    mdata = pd.read_csv('data/H2O glued electrode #1 11-6-2017.csv') #CHANGE THIS LINE!
+	####################################################
+	####################################################
+	####################################################
+
     #tmp = mdata['0.089'].values.tolist()
     tmp = mdata['-999.999'].values.tolist()
     #determine start time...
