@@ -13,7 +13,7 @@ def close(timelimit):
 
 ##################################################
 def take_measurements(con2):
-    conn = 'COM4'
+    conn = 'COM3'
     baud = 38400
     port = serial.Serial(conn,baud)
     datstr = ''
@@ -38,7 +38,7 @@ def take_measurements(con2):
                 datstr = datstr + x
 ##################################################
 def getdata():
-    conn = 'COM4'
+    conn = 'COM3'
     baud = 38400
     x = ''
     numval = ''
