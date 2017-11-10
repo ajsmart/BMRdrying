@@ -12,7 +12,7 @@ if __name__ == '__main__':
 
     #Get the data from the laser
     #mdata = pd.read_csv('alcolhol.csv')
-    mdata = pd.read_csv('data/10.26_2(al).csv')
+    mdata = pd.read_csv('data/IAC #1 11-3-2017.csv')
     #tmp = mdata['0.089'].values.tolist()
     tmp = mdata['-999.999'].values.tolist()
     #determine start time...
@@ -31,12 +31,12 @@ if __name__ == '__main__':
     plt.ylabel('Distance from laser (mm)')
     plt.xlabel('Number of samples')
     plt.grid('on')
-    plt.figure(2)
-    plt.plot(timevec,porosityvec,'r-')
-    plt.grid('on')
-    plt.title('Porosity Measurements')
-    plt.ylabel('Porosity')
-    plt.xlabel('Time (seconds)')
+    #plt.figure(2)
+    #plt.plot(timevec,porosityvec,'r-')
+    #plt.grid('on')
+    #plt.title('Porosity Measurements')
+    #plt.ylabel('Porosity')
+    #plt.xlabel('Time (seconds)')
     #plt.figure(3)
     #plt.plot(tmp)
     plt.show()
