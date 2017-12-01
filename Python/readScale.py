@@ -63,17 +63,17 @@ def getdata():
 ##################################################
 if __name__ == '__main__':
     parent_conn, child_conn = multiprocessing.Pipe()
-    timelimit = 30*240
+    timelimit = 30*200
 
     #initial measurements
     tmp = raw_input("Press enter when you are ready to measure weight \nof current collector minus slurry.")
     w1 = float(getdata())
     #tmp = raw_input("\nPlace current collector on scale.\nPress enter when ready to take accurate measurement.")
-    #total_w = float(getdata())
+    total_w = w1#float(getdata())
     colctr_w = w1#total_w-w1
     #print("\n\nWeight of measurement apparatus: " +str(w1)+" g")
     print("Weight of collector: "+str(colctr_w)+" g\n\n")
-    tmp = raw_input("Press enter when you have applied solvent, \nand are ready to take measurements for 4 Hours.")
+    tmp = raw_input("Press enter when you have applied solvent, \nand are ready to take measurements for 3 Hours and 20 Minutes.")
 
     #measurements over time
     p1 = multiprocessing.Process(target=close, args=(timelimit,)) #timer
