@@ -37,7 +37,13 @@ def press(button):
         #print output
         plot(fn)
     else:
-        print "do nothing"
+        mypath = ".\data"
+        files = []
+        for (dirpath, dirnames, filenames) in walk(mypath):
+            files.extend(filenames)
+            break
+    #file selection
+        app.setOptionBox("File Name",files) 
 
 if __name__ == '__main__':
     app = gui("Selection Window","500x200")
@@ -60,5 +66,9 @@ if __name__ == '__main__':
     app.addLabelOptionBox("File Name",files) 
 
     app.addButtons(["Plot","Exit"], press)
+    app.setButtonBg("Plot","white")
+    app.setButtonFg("Plot","Navy")
+    app.setButtonBg("Exit","Black")
+    app.setButtonFg("Exit","green")
 	
     app.go()
