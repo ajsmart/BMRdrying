@@ -1,5 +1,19 @@
 from appJar import gui
+from readScale import getdata
 
+def getsample(button):
+    app.removeButton("Weigh")
+    app.removeLabel("zero_w")
+    tmp = "12.3752"#getdata()
+    app.addLabel("total_w",tmp+" grams",colspan=2)
+    #print "getting sample"
+    return
+#####################################################
+def start_program():
+    row = app.getRow()
+    app.addButton("Weigh",getsample,row,0)
+    app.addLabel("zero_w","0.0000 grams",row,1)
+#####################################################
 def press(button):
     if button == "Exit":
         app.stop()
@@ -12,10 +26,12 @@ def press(button):
             app.setLabelBg("message","red")
             app.setLabelFg("message","green")
         else:
-            app.setLabel("message","Starting measurement program!")
+            app.setLabel("message","Put collector on scale and click \"weigh\" when you have a constant value.")
             app.setLabelBg("message","Green")
             app.setLabelFg("message","Black")
-
+            app.removeButton("Start Measurements")
+            start_program()
+#####################################################
 if __name__ == '__main__':
     #initiate app
     app = gui("Scale Window","500x200")

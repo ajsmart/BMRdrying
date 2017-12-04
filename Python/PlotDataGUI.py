@@ -32,9 +32,6 @@ def press(button):
         app.stop()
     elif button == "Plot":
         fn = app.getOptionBox("File Name")
-        global output
-        output = "Plotting: " + fn
-        #print output
         plot(fn)
     else:
         mypath = ".\data"
@@ -49,8 +46,6 @@ if __name__ == '__main__':
     app = gui("Selection Window","500x200")
     app.setBg("green")
     app.setFont(12)
-    global output
-    output = ""
 
     app.addLabel("title", "Welcome to the selector!")
     app.setLabelBg("title", "Blue")
