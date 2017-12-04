@@ -30,29 +30,35 @@ def plot(fn):
 def press(button):
     if button == "Exit":
         app.stop()
-    else:
+    elif button == "Plot":
         fn = app.getOptionBox("File Name")
+        global output
+        output = "Plotting: " + fn
+        #print output
         plot(fn)
-        print"Plotting: " + fn
-
+    else:
+        print "do nothing"
 
 if __name__ == '__main__':
     app = gui("Selection Window","500x200")
-    app.setBg("orange")
+    app.setBg("green")
+    app.setFont(12)
+    global output
+    output = ""
 
     app.addLabel("title", "Welcome to the selector!")
     app.setLabelBg("title", "Blue")
-    app.setLabelFg("title", "Orange")
+    app.setLabelFg("title", "green")
     
-    app.setFont(12)
+    #get list of filenames
     mypath = ".\data"
     files = []
     for (dirpath, dirnames, filenames) in walk(mypath):
         files.extend(filenames)
         break
-
-    app.addLabelOptionBox("File Name",files)
+    #file selection
+    app.addLabelOptionBox("File Name",files) 
 
     app.addButtons(["Plot","Exit"], press)
-
+	
     app.go()
