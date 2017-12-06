@@ -1,13 +1,68 @@
 from appJar import gui
 from readScale import getdata
+from readScale import close
+from readScale import take_measurements
+import multiprocessing
+import time
+import matplotlib.pyplot as plt
+import csv
+
+def gatherdata(button):
+    #set communication between processes and input variable data
+    parent_conn, child_conn = multiprocessing.Pipe()
+    timelimit = 60*60*3
+    tmp = app.getLabel("total_w")
+    twstr = ""
+    for x in tmp:
+        if x == " ":
+             break
+        else:
+            twstr = twstr + x
+    tot_w = float(twstr)
+    
+    #multithread the timer and the scale weight
+    p1 = multiprocessing.Process(target=close, args=(timelimit,)) #timer
+    p2 = multiprocessing.Process(target=take_measurements, args=(child_conn,)) #data acquisition
+    p1.start() #start timer
+    p2.start()
+    #declare result vectors
+    numvec = []
+    numvec2 = []
+    t = []
+    app.addLabel("output","")
+    #collect data while time counts down.
+    while p1.is_alive():
+        dat = parent_conn.recv()
+        app.setLabel("output",str(dat)+" grams")
+        numvec.append(dat - tot_w)
+        a = time.clock()
+        t.append(a)
+        #porosity estimate
+        numvec2.append(float(((dat - tot_w)/.7893)/(3.141592*1*.06)))
+    #time's up, terminate all processes
+    p2.terminate()
+    
+    #save the data
+    name = app.getEntry("File Name:")
+    with open('data/'+name+'.csv', 'wb') as output:
+        writer = csv.writer(output,delimiter=',')
+        writer.writerow(["TIME","WEIGHT","POROSITY"])
+        for x in range(0,len(t)):
+            writer.writerow([str(t[x]), str(numvec[x]), str(numvec2[x])])
+    
+    #print success message
+    app.addLabel("success","SUCCESS!",colspan=2)
+
 
 def getsample(button):
     app.removeButton("Weigh")
     app.removeLabel("zero_w")
-    tmp = "12.3752"#getdata()
-    app.addLabel("total_w",tmp+" grams",colspan=2)
+    tmp = float(getdata()) #"12.3752"
+    app.addLabel("total_w",str(tmp)+" grams",colspan=2)
     #print "getting sample"
-    return
+    app.addLabel("msg1","Press 'Start' when you are ready to collect data.",colspan=2)
+    app.addLabel("msg2","Process will take 3 hours.",colspan=2)
+    app.addButton("Start", gatherdata,colspan=2)
 #####################################################
 def start_program():
     row = app.getRow()
