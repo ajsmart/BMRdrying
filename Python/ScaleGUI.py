@@ -44,7 +44,7 @@ def gatherdata(button):
     
     #save the data
     name = app.getEntry("File Name:")
-    with open('data/'+name+'.csv', 'wb') as output:
+    with open('data/Scale/'+name+'.csv', 'wb') as output:
         writer = csv.writer(output,delimiter=',')
         writer.writerow(["TIME","WEIGHT","POROSITY"])
         for x in range(0,len(t)):
@@ -90,13 +90,13 @@ def press(button):
 if __name__ == '__main__':
     #initiate app
     app = gui("Scale Window","500x200")
-    app.setBg("green")
+    app.setBg("PeachPuff")
     app.setFont(12)
 
     #title panel
     app.addLabel("title","Scale Reading System", colspan=2)
-    app.setLabelBg("title","blue")
-    app.setLabelFg("title","green")
+    app.setLabelBg("title","Maroon")
+    app.setLabelFg("title","PeachPuff")
 
     #Filename input
     row = app.getRow()

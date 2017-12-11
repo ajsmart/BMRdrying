@@ -5,32 +5,49 @@ from os import walk
 import matplotlib.pyplot as plt
 import pandas as pd
 
-def plot(fn):
-    plt.figure(1)
-    plt.plot(mvec)
-    plt.title('Laser Measurements')
-    plt.ylabel('Distance from laser (mm)')
-    plt.xlabel('Number of samples')
-    plt.grid('on')
-    plt.show()
-    return
+def plot(fn,val):
+    wdata = pd.read_csv('data/Scale/'+fn)
+    timevec = wdata['TIME'].values.tolist()
+    weightvec = wdata['WEIGHT'].values.tolist()
+    porosityvec = wdata['POROSITY'].values.tolist()
+    
+    if val == 1:
+        plt.figure(1)
+        plt.plot(timevec,weightvec)
+        plt.title('Scale Measurements')
+        plt.ylabel('Weight (grams)')
+        plt.xlabel('Time (seconds)')
+        plt.grid('on')
+        plt.show()
+        return
+    else:
+        plt.plot(timevec,porosityvec)
+        plt.title('Scale Measurements')
+        plt.ylabel('Porosity')
+        plt.xlabel('Time (seconds)')
+        plt.grid('on')
+        plt.show()
+        return
 
 def press(button):
     if button == "Exit":
         app.stop()
-    else:#button == "Plot"
+    elif button == "Plot Weight":
         fn = app.getOptionBox("File Name")
-        plot(fn)
+        plot(fn,1)
+    else:
+        fn = app.getOptionBox("File Name")
+        plot(fn,2)
 
 
 if __name__ == '__main__':
     app = gui("Selection Window","500x200")
-    app.setBg("green")
+    app.setBg("LightPink")
     app.setFont(12)
 
-    app.addLabel("title", "Welcome to the selector!")
+    app.addLabel("title", "Scale Data Plotter")
     app.setLabelBg("title", "Blue")
-    app.setLabelFg("title", "green")
+    app.setLabelFg("title", "LightPink")
     
     #get list of filenames
     mypath = ".\data\Scale"
@@ -41,10 +58,8 @@ if __name__ == '__main__':
     #file selection
     app.addLabelOptionBox("File Name",files) 
 
-    app.addButtons(["Plot","Exit"], press)
-    app.setButtonBg("Plot","white")
-    app.setButtonFg("Plot","Navy")
-    app.setButtonBg("Exit","Black")
-    app.setButtonFg("Exit","green")
+    app.addButtons(["Plot Porosity","Plot Weight","Exit"], press)
+    app.setButtonBg("Exit","IndianRed")
+    app.setButtonFg("Exit","NavajoWhite")
 	
     app.go()
