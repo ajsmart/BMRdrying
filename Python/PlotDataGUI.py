@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 def plot(fn):
-    mdata = pd.read_csv('data/'+fn)
+    mdata = pd.read_csv('data/Laser/'+fn)
     tmp = mdata['-999.999'].values.tolist()
     #determine start time...
     started = False #we have not started the data recording yet
@@ -34,13 +34,7 @@ def press(button):
         fn = app.getOptionBox("File Name")
         plot(fn)
     else:
-        mypath = ".\data"
-        files = []
-        for (dirpath, dirnames, filenames) in walk(mypath):
-            files.extend(filenames)
-            break
-    #file selection
-        app.setOptionBox("File Name",files) 
+        a = 0
 
 if __name__ == '__main__':
     app = gui("Selection Window","500x200")
@@ -52,7 +46,7 @@ if __name__ == '__main__':
     app.setLabelFg("title", "green")
     
     #get list of filenames
-    mypath = ".\data"
+    mypath = ".\data\Laser"
     files = []
     for (dirpath, dirnames, filenames) in walk(mypath):
         files.extend(filenames)
