@@ -21,8 +21,8 @@ def commit(button):
     os.system(add)
     os.system(commit)
     os.system(push)
-    app.addLabel("message","Push Successful!")
-    app.setLabelFg("message","Red")
+    app.addLabel("success message","Push Successful!")
+    app.setLabelFg("success message","Red")
 #######################################
 if __name__ == '__main__':
     app = gui("Selection Window","500x200")
