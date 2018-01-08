@@ -15,14 +15,14 @@ def commit(button):
     day = str(now.day)
     hour = str(now.hour)
     minute = str(now.minute)
-    commit = "git commit -m \"automated python git update" + month + "-" + day + "-" + year + " " + hour + ":" + minute +"\""
+    commit = "git commit -m \"automated python git update " + month + "-" + day + "-" + year + " " + hour + ":" + minute +"\""
     push = "git push origin master"
     os.system(upd8)
     os.system(add)
     os.system(commit)
     os.system(push)
     app.addLabel("message","Push Successful!")
-    app.setLabelFg("Red")
+    app.setLabelFg("message","Red")
 #######################################
 if __name__ == '__main__':
     app = gui("Selection Window","500x200")
