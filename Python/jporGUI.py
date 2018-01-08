@@ -1,5 +1,6 @@
 import numpy as np
 from appJar import gui
+from os import walk
 from readScale import getdata
 from readScale import close
 from readScale import take_measurements
@@ -27,13 +28,19 @@ def get_one_sample():
      d1=input("Enter distance through laser:",)
      return w1,d1
 
-def mainthing(type):   #type=0 is new type=1 is old
+def get_samples(button):
+     w=app.addButtons(["Weigh"],float(getdata))
+
+def mainthing(type,name):   #type=0 is new, type=1 is old
      w1,w2,w3,d1,d2,d3=0,0,0,0,0,0
-     #if type==1:  #old is 1
-          
-     #answer=raw_input("Is data for plate and beginning already stored? y/n:")
-     #if answer == "n": 
-     if type == 0: 
+
+
+     if type==1:  #old is 1
+          app.setLabel("message","Which Sample is needed")
+          app.addButtons(["Plate","Start","End"],get_samples, colspan=2)
+
+###################################################
+     if type == 0: #new File
           row=app.getRow()
           app.addButton("Weigh",
           if x1 == "y":
@@ -78,6 +85,7 @@ def mainthing(type):   #type=0 is new type=1 is old
           w3=weightvec[2]
           d3=disvec[2] 
 
+     ##### Print Porosity
      print "Porosity:",porosity(w1,w2,w3,d1,d2,d3)
      with open('data/misc/'+name+'.csv', 'wb') as output:
           writer = csv.writer(output,delimiter=',')
@@ -92,16 +100,21 @@ def press(button):
           app.stop()
      if button=="New File":
           row=app.getRow()
-          app.addLabelEntry("File Name:",row,0)
+          name=app.addLabelEntry("File Name:",row,0)
           app.addLabel(".csv",".csv",row,1)
           x=0
-          mainthing(x)
+          mainthing(x,name)
 
      #if it already exists make a drop down menu
      if button=="Old File":
-          name=app.getOptionBox("File Name")
+          mypath=".\data\Porosity"
+          files[]
+          for (dirpath, dirnames, filenames) in walk(mypath):
+               files.extend(filenames)
+               break
+          name=app.addLabelOptionBox("File Name",files)
           x=1
-          mainthing(x)
+          mainthing(x,name)
 
 if __name__=='__main__':
      #initiate app
@@ -122,49 +135,3 @@ if __name__=='__main__':
 
      mainthing()
 
-###run gui
-#def start_program():
-#    row = app.getRow()
-#    app.addButton("Weigh",getsample,row,0)
-#    app.addLabel("zero_w","0.0000 grams",row,1)
-#def press(button):
-#    if button == "Exit":
-#        app.stop()
-#    else:
-#        val = app.getEntry("File Name:")
-#        #the commented out code was an experiment that worked.  I'm leaving it here for #future reference
-#        #app.setLabel("message","You just started recording")
-#        if val =="":
-#            app.setLabel("message","Error: No filename Designated")
-#            app.setLabelBg("message","red")
-#if __name__ == '__main__':
-#    #initiate app
-#    app = gui("Scale Window","500x200")
-#    app.setBg("PeachPuff")
-#    app.setFont(12)
-#
-#    #title panel
-#    app.addLabel("title","Scale Reading System", colspan=2)
-#    app.setLabelBg("title","Maroon")
-#    app.setLabelFg("title","PeachPuff")
-#
-#    #Filename input
-#    row = app.getRow()
-#    app.addLabelEntry("File Name:",row,0)
-#    app.addLabel(".csv",".csv",row,1)
-#
-#    #declare buttons
-#    app.addButtons(["Start Measurements","Exit"],press, colspan=2)
-#
-#    #message area
-#    app.addLabel("message","", colspan=2)
-#    #app.setLabelFg("message","Red")
-#
-#    app.go()
-#            app.setLabelFg("message","green")
-#        else:
-#            app.setLabel("message","Put collector on scale and click \"weigh\" when you #have a constant value.")
-#            app.setLabelBg("message","Green")
-#            app.setLabelFg("message","Black")
-#            app.removeButton("Start Measurements")
-#            start_program()
