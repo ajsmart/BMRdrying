@@ -8,6 +8,7 @@ def commit(button):
     if button == "Exit":
         app.stop()
     else:
+        app.removeLabel("success message")
         upd8 = "git pull"
         add = "git add --all"
         now = datetime.datetime.now()
@@ -35,5 +36,6 @@ if __name__ == '__main__':
     app.setLabelFg("title", "PaleTurquoise")
 
     app.addButtons(["Push","Exit"], commit)
+    app.addLabel("success message","")
 
     app.go()
