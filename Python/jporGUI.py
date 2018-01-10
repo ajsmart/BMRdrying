@@ -16,122 +16,128 @@ p_Carbon=1.9  #g/cm3
 p_PVDF=1.78   #g/cm3
 p_NMP=1.03    #g/cm3
 
-def porosity(w1,w2,w3,d1,d2,d3):
+######## Declare GLOBAL variables
+w1,w2,w3,d1,d2,d3=1,1,1,1,1,1
+name=""
+type=0
+#################
+
+def porosity():
+     global w1,w2,w3,d1,d2,d3
+     if d2==d1:
+          app.addLabel("error","ERROR DEVIDE BY ZERO",colspan=3)
      v_electrode=(w3-w1)*(wp_Active/p_Active+wp_Carbon/p_Carbon+wp_PVDF/p_PVDF)
      v_nmp=(w2-w3)/p_NMP
      v_procent=(d3-d1)/(d2-d1)
      return ((v_electrode+v_nmp)*(v_procent)-v_electrode)/((v_electrode+v_nmp)*v_procent)
 
-### record samples
-def get_one_sample():
-     w1=float(getdata())
-     d1=input("Enter distance through laser:",)
-     return w1,d1
+######## Read File Doesn't work
+def readfile():
+     global w1,w2,w3,d1,d2,d3
+     global name
+     data=pd.read_csv('data/por/'+name+'.csv')
+     weightvec=data['WEIGHT'].values.tolist()
+     disvec=data['DISTANCE'].values.tolist()
+     w1,w2,w3=weightvec[0],weightvec[1],weightvec[2]
+     d1,d2,d3=disvec[0],disvec[1],disvec[2]
 
-def get_samples(button):
-     w=app.addButtons(["Weigh"],float(getdata))
-
-def mainthing(type,name):   #type=0 is new, type=1 is old
-     w1,w2,w3,d1,d2,d3=0,0,0,0,0,0
-
-
-     if type==1:  #old is 1
-          app.setLabel("message","Which Sample is needed")
-          app.addButtons(["Plate","Start","End"],get_samples, colspan=2)
-
-###################################################
-     if type == 0: #new File
-          row=app.getRow()
-          app.addButton("Weigh",
-          if x1 == "y":
-               a=input("weigh")
-               w1,d1=get_one_sample()
-          x2=raw_input("Ready to collect beginning data? y/n:")
-          if x2=="y":
-               a=input("weigh")
-               w2,d2=get_one_sample()
-          with open('data/misc/'+name+'.csv', 'wb') as output:
-               writer = csv.writer(output,delimiter=',')
-               writer.writerow([" ","WEIGHT","DISTANCE"])
-               writer.writerow(["Plate", w1, d1])
-               writer.writerow(["Beginning", w2, d2])
-     elif answer=="y":
-          data=pd.read_csv('data/misc/'+name+'.csv')
-          weightvec=data['WEIGHT'].values.tolist()
-          disvec=data['DISTANCE'].values.tolist()
-          w1,w2=weightvec[0],weightvec[1]
-          d1,d2=disvec[0],disvec[1]               
-
-     answer2=raw_input("Is data for the end already stored? y/n:")
-     if answer2=="n":
-          print('')
-          x3=raw_input("Ready to collect ending data? y/n:")
-          if x3=="y":
-               w3,d3=get_one_sample()
-               with open('data/misc/'+name+'.csv', 'wb') as output:
-                    writer = csv.writer(output,delimiter=',')
-                    writer.writerow([" ","WEIGHT","DISTANCE"])
-                    writer.writerow(["Plate", w1, d1])
-                    writer.writerow(["Beginning", w2, d2])
-                    writer.writerow(["Ending", w3, d3])
-          else:
-               print "Thanks, Come back when drying is finished"
-               sys.exit()
-
-     elif answer2=="y":
-          data=pd.read_csv('data/misc/'+name+'.csv')
-          weightvec=data['WEIGHT'].values.tolist()
-          disvec=data['DISTANCE'].values.tolist()
-          w3=weightvec[2]
-          d3=disvec[2] 
-
-     ##### Print Porosity
-     print "Porosity:",porosity(w1,w2,w3,d1,d2,d3)
-     with open('data/misc/'+name+'.csv', 'wb') as output:
+def writefile():
+     global w1,w2,w3,d1,d2,d3
+     global name
+     d1=app.getEntry("Plate:")
+     d2=app.getEntry("Beginning:")
+     d3=app.getEntry("Ending:")
+     
+     with open('data/por/'+name+'.csv', 'wb') as output:
           writer = csv.writer(output,delimiter=',')
           writer.writerow([" ","WEIGHT","DISTANCE"])
           writer.writerow(["Plate", w1, d1])
           writer.writerow(["Beginning", w2, d2])
           writer.writerow(["Ending", w3, d3])
-          writer.writerow(["Porosity", porosity(w1,w2,w3,d1,d2,d3)])
+          writer.writerow(["Porosity",porosity()])
+
+def mainthing(button):
+     global w1,w2,w3,d1,d2,d3
+     global type
+     global name
+     if type == 0:
+          name=app.getEntry("File Name:")
+     if type == 1:
+          x=1
+          #readfile()
+     if button == "Plate":
+          w1= float(getdata())
+          #get data for plate   
+     if button == "Beginning":
+          w2= float(getdata())
+          #get data for beginning
+     if button == "Ending":
+          #get data for ending 
+          w3= float(getdata())
+     if button=="Porosity":
+          por="Porosity: "+str(porosity())
+          app.addLabel("output",por,colspan=3)
+          
+     if button=="Save & Quit":
+          writefile()
+          app.stop()
+     return
 
 def press(button):
-     if button=="Exit":
-          app.stop()
+     global type
      if button=="New File":
+          global type
           row=app.getRow()
-          name=app.addLabelEntry("File Name:",row,0)
-          app.addLabel(".csv",".csv",row,1)
-          x=0
-          mainthing(x,name)
+          #app.addLabelEntry("File Name:",row,0)
+          app.addLabelEntry("File Name:",row,0,colspan=3)
+          app.addLabel(".csv",".csv",row,2)
+          type=0
 
      #if it already exists make a drop down menu
      if button=="Old File":
-          mypath=".\data\Porosity"
-          files[]
+          global name
+          global type
+          mypath=".\data\por"
+          files=[]
           for (dirpath, dirnames, filenames) in walk(mypath):
                files.extend(filenames)
                break
           name=app.addLabelOptionBox("File Name",files)
-          x=1
-          mainthing(x,name)
+          type=1
+
+     app.removeLabel("message")
+     app.removeButton("New File")
+     app.removeButton("Old File")
+     app.addLabel("message1","Weigh Electrode",colspan=3)
+     app.setLabelBg("message1","yellow")
+     app.addButtons(["Plate","Beginning","Ending"],mainthing,colspan=3)
+
+     app.addLabel("message2","Measure distance",colspan=3)
+     app.setLabelBg("message2","yellow")
+     rowd=app.getRow()
+     name=app.addLabelEntry("Plate:",rowd,0)
+     name=app.addLabelEntry("Beginning:",rowd,1)
+     name=app.addLabelEntry("Ending:",rowd,2)
+
+     app.addButtons(["Porosity","Save & Quit"],mainthing,colspan=3)
 
 if __name__=='__main__':
      #initiate app
-     app=gui("Scale Window","500x200")
+     app=gui("Scale Window","500x300")
      app.setBg("PeachPuff")
      app.setFont(12)
 
      #title panel
-     app.addLabel("title","Porosity System", colspan=2)
+     app.addLabel("title","Porosity System",colspan=3)
      app.setLabelBg("title","Maroon")
      app.setLabelFg("title","PeachPuff")
 
      #declare Buttons
-     app.addLabel("message","Does the File Already exist
-     app.set Bg("Blue")
-     app.setFont(11)
-     app.addButtons(["New File","Old File","Exit"],press,colspan2)
+     app.addLabel("message","Does the File Already exist",colspan=3)
+     app.setLabelBg("message","yellow")
 
-     mainthing()
+     app.addButtons(["New File","Old File"],press,colspan=3)
+     ###### when clicked send button info to program press()##### 
+     
+     app.go()
 

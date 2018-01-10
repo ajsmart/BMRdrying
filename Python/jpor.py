@@ -39,13 +39,13 @@ def mainthing():
           if x2=="y":
                a=input("weigh")
                w2,d2=get_one_sample()
-          with open('data/misc/'+name+'.csv', 'wb') as output:
+          with open('data/por/'+name+'.csv', 'wb') as output:
                writer = csv.writer(output,delimiter=',')
                writer.writerow([" ","WEIGHT","DISTANCE"])
                writer.writerow(["Plate", w1, d1])
                writer.writerow(["Beginning", w2, d2])
      elif answer=="y":
-          data=pd.read_csv('data/misc/'+name+'.csv')
+          data=pd.read_csv('data/por/'+name+'.csv')
           weightvec=data['WEIGHT'].values.tolist()
           disvec=data['DISTANCE'].values.tolist()
           w1,w2=weightvec[0],weightvec[1]
@@ -57,7 +57,7 @@ def mainthing():
           x3=raw_input("Ready to collect ending data? y/n:")
           if x3=="y":
                w3,d3=get_one_sample()
-               with open('data/misc/'+name+'.csv', 'wb') as output:
+               with open('data/por/'+name+'.csv', 'wb') as output:
                     writer = csv.writer(output,delimiter=',')
                     writer.writerow([" ","WEIGHT","DISTANCE"])
                     writer.writerow(["Plate", w1, d1])
@@ -68,14 +68,14 @@ def mainthing():
                sys.exit()
 
      elif answer2=="y":
-          data=pd.read_csv('data/misc/'+name+'.csv')
+          data=pd.read_csv('data/por/'+name+'.csv')
           weightvec=data['WEIGHT'].values.tolist()
           disvec=data['DISTANCE'].values.tolist()
           w3=weightvec[2]
           d3=disvec[2] 
 
      print "Porosity:",porosity(w1,w2,w3,d1,d2,d3)
-     with open('data/misc/'+name+'.csv', 'wb') as output:
+     with open('data/por/'+name+'.csv', 'wb') as output:
           writer = csv.writer(output,delimiter=',')
           writer.writerow([" ","WEIGHT","DISTANCE"])
           writer.writerow(["Plate", w1, d1])
