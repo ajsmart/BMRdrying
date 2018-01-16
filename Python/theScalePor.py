@@ -7,6 +7,15 @@ import time
 import matplotlib.pyplot as plt
 import csv
 
+def readfile():
+    global w1,w2,w3,d1,d2,d3
+    global name
+    data=pd.read_csv('data/por/'+name+'.csv')
+    weightvec=data['WEIGHT'].values.tolist()
+    disvec=data['DISTANCE'].values.tolist()
+    w1,w2,w3=weightvec[0],weightvec[1],weightvec[2]
+    d1,d2,d3=disvec[0],disvec[1],disvec[2]
+##################################    
 def gatherdata(button):
     #set communication between processes and input variable data
     parent_conn, child_conn = multiprocessing.Pipe()
@@ -69,24 +78,36 @@ def start_program():
     app.addButton("Weigh",getsample,row,0)
     app.addLabel("zero_w","0.0000 grams",row,1)
 #####################################################
-def press(button):
-    if button == "Exit":
-        app.stop()
-    else:
-        val = app.getEntry("File Name:")
-        #the commented out code was an experiment that worked.  I'm leaving it here for future reference
-        #app.setLabe("message","You just started recording")
-        if val =="":
-            app.setLabel("message","Error: No filename Designated")
-            app.setLabelBg("message","red")
-            app.setLabelFg("message","green")
-        else:
-            app.setLabel("message","Put collector on scale and click \"weigh\" when you have a constant value.")
-            app.setLabelBg("message","Green")
-            app.setLabelFg("message","Black")
-            app.removeButton("Start Measurements")
-            start_program()
+
 #####################################################
+def firstpress(button):
+    global name
+    global type_file
+    if button =="Quit":
+        app.stop
+    if button=="New File":
+        row=app.getRow()
+        app.addLabelEntry("File Name:",row,0,colspan=2)
+        app.addLabel(".csv",".csv",row,2)
+        type_file=0
+    #if it already exists make a drop down menu
+    if button=="Old File":
+        mypath=".\data\Scale"
+        files=[]
+        for (dirpath, dirnames, filenames) in walk(mypath):
+            files.extend(filenames)
+            break
+        app.addLabelOptionBox("File Name",files,colspan=3)
+        type_file=1
+    app.removeLabel("message")
+    app.removeButton("New File")
+    app.removeButton("Old File")
+    app.removeButton("Quit")
+    app.addLabel("prompt1","Measure PLATE without and with Slurry",colspan=3)
+    r=app.getRow()
+    app.addNumericEntry("Plate",r,0)
+    app.addNumericEntry("With",r,0)
+
 if __name__ == '__main__':
     #initiate app
     app = gui("Scale Window","500x200")
@@ -94,20 +115,15 @@ if __name__ == '__main__':
     app.setFont(12)
 
     #title panel
-    app.addLabel("title","Scale Reading System", colspan=2)
+    app.addLabel("title","Scale Reading System", colspan=3)
     app.setLabelBg("title","Maroon")
     app.setLabelFg("title","PeachPuff")
 
-    #Filename input
-    row = app.getRow()
-    app.addLabelEntry("File Name:",row,0)
-    app.addLabel(".csv",".csv",row,1)
+    #declare Buttons
+    app.addLabel("message","Does the File Already exist",colspan=3)
+    app.setLabelBg("message","yellow")
 
-    #declare buttons
-    app.addButtons(["Start Measurements","Exit"],press, colspan=2)
-
-    #message area
-    app.addLabel("message","", colspan=2)
-    #app.setLabelFg("message","Red")
+    app.addButtons(["New File","Old File","Quit"],firstpress,colspan=3)
+    ###### when clicked send button info to program firstpress()##### 
 
     app.go()
