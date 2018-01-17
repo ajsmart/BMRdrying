@@ -6,12 +6,14 @@ import multiprocessing
 import time
 import matplotlib.pyplot as plt
 import csv
-
+w1,w2,w3,d1,d2,d3=1,1,1,1,1,1
+name=""
+type_file=0
 def readfile():
     global w1,w2,w3,d1,d2,d3
     global name
     data=pd.read_csv('data/por/'+name+'.csv')
-    weightvec=data['WEIGHT'].values.tolist()
+    weightvec=data['WEIGHTCRIT'].values.tolist()
     disvec=data['DISTANCE'].values.tolist()
     w1,w2,w3=weightvec[0],weightvec[1],weightvec[2]
     d1,d2,d3=disvec[0],disvec[1],disvec[2]
@@ -55,29 +57,21 @@ def gatherdata(button):
     name = app.getEntry("File Name:")
     with open('data/Scale/'+name+'.csv', 'wb') as output:
         writer = csv.writer(output,delimiter=',')
-        writer.writerow(["TIME","WEIGHT","POROSITY"])
+        writer.writerow(["TIME","WEIGHT","POROSITY","WEIGHTCRIT","DISTANCE","POROSITYFINAL"])
         for x in range(0,len(t)):
             writer.writerow([str(t[x]), str(numvec[x]), str(numvec2[x])])
     
     #print success message
     app.addLabel("success","SUCCESS!",colspan=2)
 
-
-def getsample(button):
-    app.removeButton("Weigh")
-    app.removeLabel("zero_w")
-    tmp = float(getdata()) #"12.3752"
-    app.addLabel("total_w",str(tmp)+" grams",colspan=2)
-    #print "getting sample"
-    app.addLabel("msg1","Press 'Start' when you are ready to collect data.",colspan=2)
-    app.addLabel("msg2","Process will take 3 hours.",colspan=2)
-    app.addButton("Start", gatherdata,colspan=2)
 #####################################################
-def start_program():
-    row = app.getRow()
-    app.addButton("Weigh",getsample,row,0)
-    app.addLabel("zero_w","0.0000 grams",row,1)
-#####################################################
+def weigh(button)
+global w1,w2,w3
+    if button=="Weigh Plate":
+        w1=float(getdata())
+    if button=="Start Measurements":
+        w2=float(getdata())
+        gatherdata("Start")
 
 #####################################################
 def firstpress(button):
@@ -90,6 +84,16 @@ def firstpress(button):
         app.addLabelEntry("File Name:",row,0,colspan=2)
         app.addLabel(".csv",".csv",row,2)
         type_file=0
+        app.removeLabel("message")
+        app.removeButton("New File")
+        app.removeButton("Old File")
+        app.removeButton("Quit")
+        app.addLabel("prompt1","Measure PLATE without and with Slurry",colspan=3)
+        r=app.getRow()
+        app.addNumericEntry("Plate",r,1)
+        app.addNumericEntry("With",r,2)
+        app.addLabel("prompt2","Weigh Plate without slurry and start program",colspan=3)
+        app.addButtons("Weigh Plate","Start Measurements",weigh,colspan=3)
     #if it already exists make a drop down menu
     if button=="Old File":
         mypath=".\data\Scale"
@@ -99,14 +103,13 @@ def firstpress(button):
             break
         app.addLabelOptionBox("File Name",files,colspan=3)
         type_file=1
-    app.removeLabel("message")
-    app.removeButton("New File")
-    app.removeButton("Old File")
-    app.removeButton("Quit")
-    app.addLabel("prompt1","Measure PLATE without and with Slurry",colspan=3)
-    r=app.getRow()
-    app.addNumericEntry("Plate",r,0)
-    app.addNumericEntry("With",r,0)
+        app.removeLabel("message")
+        app.removeButton("New File")
+        app.removeButton("Old File")
+        app.removeButton("Quit")
+       
+    
+    
 
 if __name__ == '__main__':
     #initiate app
