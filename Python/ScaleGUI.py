@@ -10,7 +10,7 @@ import csv
 def gatherdata(button):
     #set communication between processes and input variable data
     parent_conn, child_conn = multiprocessing.Pipe()
-    timelimit = 60*60*3*8
+    timelimit = 60*60*19
     tmp = app.getLabel("total_w")
     twstr = ""
     for x in tmp:
