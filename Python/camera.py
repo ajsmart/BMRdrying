@@ -1,6 +1,6 @@
 import cv2
-camera = cv2.VideoCapture(0)
-for x in range(1,10):
+camera = cv2.VideoCapture(1)
+while True:
     image = camera.read()[1]
     gray = cv2.cvtColor(image,cv2.COLOR_BGR2GRAY)
     cv2.imshow('image',gray)

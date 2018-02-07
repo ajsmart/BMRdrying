@@ -1,4 +1,4 @@
-.gitignore
 \.vscode
 *.pyc
-\image\*.png
+*.png
+*.avi
